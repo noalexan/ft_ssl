@@ -5,13 +5,25 @@
 
 int run_md5(char ** const argv)
 {
-	printf("Here is md5!\n");
+	puts("Here is md5!");
 	return 0;
 }
 
 int run_sha256(char ** const argv)
 {
-	printf("Here is sha256!\n");
+	puts("Here is sha256!");
+	return 0;
+}
+
+int help()
+{
+	fprintf(stderr,
+		"Commands:\n"
+		"md5\n"
+		"sha256\n"
+		"Flags:\n"
+		"-p -q -r -s\n"
+	);
 	return 0;
 }
 
@@ -22,9 +34,11 @@ int main(int argc, char **argv)
 
 	if (argc < 2) {
 		fprintf(stderr, "usage: %s command [flags] [file/string]\n", argv[0]);
+		help();
 		exit(EXIT_FAILURE);
 	}
 
+	subcmd_register(&subcmd_list, "help", help);
 	subcmd_register(&subcmd_list, "md5", run_md5);
 	subcmd_register(&subcmd_list, "sha256", run_sha256);
 
