@@ -3,10 +3,10 @@
 #include <string.h>
 #include <subcommand.h>
 
-int subcmd_exec(t_subcommand *subcmd_list, char ** const argv)
+int subcmd_exec(t_subcommand *subcmd_list, char **const argv)
 {
 	while (subcmd_list) {
-		if (strcmp(argv[1], subcmd_list->name) == 0)
+		if (strcmp(argv[0], subcmd_list->name) == 0)
 			return subcmd_list->func(argv);
 		subcmd_list = subcmd_list->next;
 	}
@@ -27,7 +27,7 @@ void subcmd_clear(t_subcommand *subcmd_list)
 	}
 }
 
-void subcmd_register(t_subcommand **subcmd_list, const char *name, int (*func)(char ** const))
+void subcmd_register(t_subcommand **subcmd_list, const char *name, int (*func)(char **const))
 {
 	t_subcommand *new;
 

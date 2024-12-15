@@ -1,3 +1,5 @@
 #pragma once
 
-unsigned char *md5(const char *);
+#include <stddef.h>
+
+unsigned char *md5(const unsigned char *message, size_t message_length);

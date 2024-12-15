@@ -1,6 +1,6 @@
 NAME=ft_ssl
 
-CFLAGS=-I./include
+CFLAGS=-I./include -Wall -Wextra # -Werror
 LDLIBS=-L. -lssl
 
 OBJ=$(addprefix src/, main.o subcommand.o)

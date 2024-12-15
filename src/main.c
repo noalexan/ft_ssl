@@ -1,15 +1,16 @@
+#include <md5.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <subcommand.h>
-#include <md5.h>
 
-int run_md5(char ** const argv)
+int run_md5(char **const argv)
 {
-	puts("Here is md5!");
+	md5(argv[1], strlen(argv[1]));
 	return 0;
 }
 
-int run_sha256(char ** const argv)
+int run_sha256(char **const argv)
 {
 	puts("Here is sha256!");
 	return 0;
@@ -18,12 +19,11 @@ int run_sha256(char ** const argv)
 int help()
 {
 	fprintf(stderr,
-		"Commands:\n"
-		"md5\n"
-		"sha256\n"
-		"Flags:\n"
-		"-p -q -r -s\n"
-	);
+			"Commands:\n"
+			"md5\n"
+			"sha256\n"
+			"Flags:\n"
+			"-p -q -r -s\n");
 	return 0;
 }
 
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 	subcmd_register(&subcmd_list, "md5", run_md5);
 	subcmd_register(&subcmd_list, "sha256", run_sha256);
 
-	ret_value = subcmd_exec(subcmd_list, argv);
+	ret_value = subcmd_exec(subcmd_list, argv + 1);
 	subcmd_clear(subcmd_list);
 
 	return ret_value;
