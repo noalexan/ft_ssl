@@ -1,16 +1,29 @@
 NAME=ft_ssl
 
-LIB_DIR=./lib
-LIBFT_DIR=$(LIB_DIR)/libft
-
-CFLAGS=-I./include -I$(LIBFT_DIR) -Wall -Wextra # -Werror
-LDFLAGS=-fPIC
-LDLIBS=-L. -L$(LIBFT_DIR) -Wl,-Bstatic -lssl -lft_bonus -Wl,-Bdynamic
-
-OBJ=$(addprefix src/, main.o subcommand.o file.o)
-
 LIB_STATIC=libssl.a
 LIB_SHARED=libssl.so
+
+LIB_DIR=./lib
+
+INCLUDE_LIBFT=$(LIB_DIR)/libft
+LIB_LIBFT=$(LIB_DIR)/libft/libft_bonus.a
+
+CFLAGS=-fPIC -I./include $(addprefix -I, $(INCLUDE_LIBFT)) -Wall -Wextra # -Werror
+
+LDFLAGS=# -fsanitize=address
+LDLIBS= \
+	$(addprefix -L, \
+		$(foreach I, $(LIB_STATIC) $(LIB_LIBFT), $(shell dirname $(I))) \
+	) \
+	-Wl,-Bstatic \
+	$(addprefix -l, \
+		$(foreach I, $(filter %.a, $(LIB_STATIC) $(LIB_LIBFT)), \
+			$(patsubst lib%.a, %, $(shell basename $(I))) \
+		) \
+	) \
+	-Wl,-Bdynamic
+
+OBJ=$(addprefix src/, main.o subcommand.o file.o $(addprefix subcmd_, $(addsuffix .o, md5 sha256)))
 
 LIB_OBJ=$(addprefix src/, md5.o sha256.o)
 
@@ -23,7 +36,7 @@ shared: $(LIB_SHARED)
 .PHONY: static
 static: $(LIB_STATIC)
 
-$(NAME): $(LIBFT_DIR)/libft_bonus.a $(LIB_STATIC) $(OBJ)
+$(NAME): $(LIB_LIBFT) $(LIB_STATIC) $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LDLIBS)
 
 $(LIB_SHARED): $(LIB_OBJ)
@@ -32,8 +45,8 @@ $(LIB_SHARED): $(LIB_OBJ)
 $(LIB_STATIC): $(LIB_OBJ)
 	$(AR) rcs $@ $(LIB_OBJ)
 
-$(LIBFT_DIR)/libft_bonus.a:
-	make -C $(LIBFT_DIR) bonus
+$(LIB_LIBFT):
+	make -C $(shell dirname $(LIB_LIBFT)) bonus
 
 .PHONY: clean
 clean:

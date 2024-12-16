@@ -38,7 +38,7 @@ file *load_file(const int fd)
 		f->content = realloc(f->content, f->length + val);
 
 		if (f->content == NULL) {
-			perror("malloc");
+			perror("realloc");
 			free(f);
 			return NULL;
 		}
