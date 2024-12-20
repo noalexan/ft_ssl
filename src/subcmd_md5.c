@@ -66,7 +66,7 @@ int run_md5(const char **argv)
 		if (arg_quiet)
 			printf("%s\n", digest);
 		else if (arg_reverse)
-			printf("%s *stdin\n", digest);
+			printf("%s -\n", digest);
 		else
 			printf("MD5(stdin)= %s\n", digest);
 

@@ -42,7 +42,7 @@ struct __attribute__((packed)) s_md5_ctx {
 uint8_t *md5(const uint8_t *message, uint64_t message_length, uint8_t *digest)
 {
 	// Allocate new array with size divisible by 512bits
-	uint64_t data_length = ((message_length + 7) / MD5_BLOCK_LENGTH + 1) * MD5_BLOCK_LENGTH;
+	uint64_t data_length = ((message_length + 8) / MD5_BLOCK_LENGTH + 1) * MD5_BLOCK_LENGTH;
 	uint8_t *data = malloc(data_length);
 
 	if (data == NULL) {
@@ -52,13 +52,12 @@ uint8_t *md5(const uint8_t *message, uint64_t message_length, uint8_t *digest)
 
 	// Copy original message into data
 	memcpy(data, message, message_length);
+	data[message_length] = 0b10000000;
 
 	// Padding to fill remaining bits
-	if ((message_length + 8) % MD5_BLOCK_LENGTH) {
-		data[message_length] = 0b10000000;
-		for (uint64_t i = message_length + 1; i < data_length - 8; i++)
+	if ((message_length + 9) % MD5_BLOCK_LENGTH)
+		for (uint64_t i = message_length + 1; i < data_length - 9; i++)
 			data[i] = 0;
-	}
 
 	// Replace 8 end bytes by original message size
 	((uint64_t *)data)[data_length / 8 - 1] = htole64(message_length * 8);
