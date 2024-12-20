@@ -25,7 +25,7 @@ LDLIBS= \
 
 OBJ=$(addprefix src/, main.o subcommand.o file.o $(addprefix subcmd_, $(addsuffix .o, md5 sha256)))
 
-LIB_OBJ=$(addprefix src/, md5.o sha256.o)
+LIB_OBJ=$(addprefix src/, md5.o sha256.o utils.o)
 
 .PHONY: all
 all: $(LIB_SHARED) $(LIB_STATIC) $(NAME)

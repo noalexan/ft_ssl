@@ -12,13 +12,13 @@ int run_md5(const char **argv)
 	bool arg_quiet = false, arg_reverse = false, arg_stdin = false;
 	t_list *strings = NULL, *tmp;
 	const char **iterator = argv + 1;
-	__uint8_t digest[MD5_DIGEST_LENGTH + 1];
+	uint8_t digest[MD5_DIGEST_STRING_LENGTH];
 	file *f;
 
-	digest[MD5_DIGEST_LENGTH] = 0;
+	digest[MD5_DIGEST_STRING_LENGTH - 1] = 0;
 
 	// placeholder
-	for (int i = 0; i < MD5_DIGEST_LENGTH; i++)
+	for (int i = 0; i < MD5_DIGEST_STRING_LENGTH - 1; i++)
 		digest[i] = '-';
 
 	// Parse given arguments
@@ -61,13 +61,13 @@ int run_md5(const char **argv)
 	// If no arguments were given, read from stdin
 	if (*iterator == NULL && strings == NULL && arg_stdin == false) {
 		f = load_file(0);
-		md5((__uint8_t *)f->content, f->length, digest);
-		// if (arg_quiet)
-		// 	printf("%s\n", digest);
-		// else if (arg_reverse)
-		// 	printf("%s -\n", digest);
-		// else
-		// 	printf("MD5(stdin)= %s\n", digest);
+		md5((uint8_t *)f->content, f->length, digest);
+		if (arg_quiet)
+			printf("%s\n", digest);
+		else if (arg_reverse)
+			printf("%s *stdin\n", digest);
+		else
+			printf("MD5(stdin)= %s\n", digest);
 		free(f->content);
 		free(f);
 	}
@@ -76,16 +76,16 @@ int run_md5(const char **argv)
 		// If '-p' were given, read from stdin
 		if (arg_stdin) {
 			f = load_file(0);
-			md5((__uint8_t *)f->content, f->length, digest);
-			// printf("MD5(\"%s\")= %s\n", f->content, digest);
+			md5((uint8_t *)f->content, f->length, digest);
+			printf("MD5(\"%s\")= %s\n", f->content, digest);
 			free(f->content);
 			free(f);
 		}
 
 		// Iterate on all '-s' arguments
 		for (t_list *it = strings; it; it = it->next) {
-			md5((__uint8_t *)it->content, ft_strlen(it->content), digest);
-			// printf("MD5(\"%s\")= %s\n", (char *)it->content, digest);
+			md5((uint8_t *)it->content, ft_strlen(it->content), digest);
+			printf("MD5(\"%s\")= %s\n", (char *)it->content, digest);
 		}
 
 		// Finally, iterate on all given files
@@ -98,8 +98,8 @@ int run_md5(const char **argv)
 			}
 
 			f = load_file(fd);
-			md5((__uint8_t *)f->content, f->length, digest);
-			// printf("MD5(%s)= %s\n", *iterator, digest);
+			md5((uint8_t *)f->content, f->length, digest);
+			printf("MD5(%s)= %s\n", *iterator, digest);
 			free(f->content);
 			free(f);
 			close(fd);
