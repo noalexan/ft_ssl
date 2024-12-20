@@ -1,7 +1,7 @@
 NAME=ft_ssl
 
-LIB_STATIC=libssl.a
-LIB_SHARED=libssl.so
+LIB_STATIC=libft_ssl.a
+LIB_SHARED=libft_ssl.so
 
 LIB_DIR=./lib
 
@@ -35,6 +35,15 @@ shared: $(LIB_SHARED)
 
 .PHONY: static
 static: $(LIB_STATIC)
+
+.PHONY: install
+install:
+	install -m644 ./.zsh/site-functions/_ft_ssl /usr/share/zsh/site-functions/_ft_ssl
+	install -m644 ./include/md5.h /usr/local/include
+	install -m644 ./include/sha256.h /usr/local/include
+	install -m755 $(LIB_STATIC) /usr/lib64
+	install -m755 $(LIB_SHARED) /usr/lib64
+	install -m755 $(NAME) /usr/local/bin
 
 $(NAME): $(LIB_LIBFT) $(LIB_STATIC) $(OBJ)
 	$(CC) $(LDFLAGS) -o $@ $(OBJ) $(LDLIBS)

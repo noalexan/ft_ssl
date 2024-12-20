@@ -1,0 +1,26 @@
+#compdef ft_ssl
+
+_ft_ssl() {
+	local curcontext="$curcontext" state line
+	typeset -A opt_args
+
+	_arguments -C \
+		'1: :->command' \
+		'*: :->files'
+
+	case $state in
+		command)
+			local -a commands
+			commands=(
+				'md5:MD5 hash algorithm'
+				'sha256:SHA-256 hash algorithm'
+			)
+			_describe -t commands 'ft_ssl command' commands
+			;;
+		files)
+			_files
+			;;
+	esac
+}
+
+compdef _ft_ssl ./ft_ssl
